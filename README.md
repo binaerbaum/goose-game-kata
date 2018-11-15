@@ -5,7 +5,7 @@ The aim of the game is to be the first one to reach the last square.
 This repository is an attempt to solve the programming Kata presented here: 
 [goose-game-kata](https://github.com/xpeppers/goose-game-kata).
 
-#Instructions
+# Instructions
 ## Buillding and running
 The project uses sbt as the build tool. Therefore the usual commands apply.
 
@@ -20,14 +20,14 @@ Alternatively the application can be run within the IDE, e.g. IntelliJ.
 - Type `add player <name>` to add a player.
 - Type `move <name> 3, 4` to move the player with a specific dice roll.
 - Type `move <name>` if you want the system to move the player.
-- Type "quit" at any moment to quit the game.
+- Type `quit` at any moment to quit the game.
 - Have Fun!
 
-#Limitations
+# Limitations
 - The system does not keep track of the players turns, therefore a player can play as many times in a row as he or she 
 may want.
 
-#Sample output
+# Sample output
 ```
 [info] Running ch.binaerbaum.goose.game.GooseGameApp 
 Type "add player <name>" to add a player.
