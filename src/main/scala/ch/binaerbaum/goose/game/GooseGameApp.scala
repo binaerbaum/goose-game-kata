@@ -5,15 +5,14 @@ import scala.io.StdIn
 object GooseGameApp extends App {
 
   // Stream of user commands (inputs)
-  lazy val userCommands: Stream[Command] = Stream.continually(StdIn.readLine()).map(in => Command(in))
+  private lazy val userCommands: Stream[Command] = Stream.continually(StdIn.readLine()).map(in => Command(in))
 
-  val endedPf: PartialFunction[GameState, Boolean] = {
-    case Ended(_) => true
+  private def isEnded(s: GameState) = s match {
+    case e: Ended => true
+    case _ => false
   }
 
-  def isEnded(s: GameState) = endedPf.isDefinedAt(s)
-
-  // Initialize the state and generate the state transitions based on user commands
+  // Initialize the stream and generate the state transitions based on user commands
   new GameStates(userCommands).stream
     .takeWhile(s => !isEnded(s))
     .map(_.msg)

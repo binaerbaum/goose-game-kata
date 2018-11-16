@@ -9,32 +9,6 @@ import scala.util.parsing.combinator.JavaTokenParsers
   */
 case class CommandParser(rollDice: () => DiceRoll) extends JavaTokenParsers {
 
-  // Parse dice rolls
-  def diceRoll: Parser[Int] = "[1-6]".r ^^ (_.toInt)
-
-  def doubleDiceRoll: Parser[DiceRoll] = diceRoll ~ "," ~ diceRoll ^^ {
-    case d1 ~ _ ~ d2 => DiceRoll(d1, d2)
-  }
-
-  // Parses add player <name>
-  def addPlayer: Parser[Command] = "add player" ~ ident ^^ {
-    case _ ~ name => AddPlayer(name)
-  }
-
-  // Parses move <name> or move <name> d1, d2
-  def movePlayer: Parser[Command] = "move" ~ ident ~ opt(doubleDiceRoll) ^^ {
-    case _ ~ name ~ diceRoll => diceRoll match {
-      case Some(roll) => MovePlayer(name, roll)
-      case None => MovePlayer(name, rollDice())
-    }
-  }
-
-  // Quite commande
-  def quit: Parser[Command] = "quit".r ^^ (_ => Quit)
-
-  // Combinator
-  def command: Parser[Command] = addPlayer | movePlayer | quit
-
   /**
     * Parses the user input and translates it to a Command
     * @param input the command input by the user
@@ -45,6 +19,32 @@ case class CommandParser(rollDice: () => DiceRoll) extends JavaTokenParsers {
     case Failure(msg, _) => CommandNotUnderstood(input, msg)
     case Error(msg, _) => CommandNotUnderstood(input, msg)
   }
+
+  // Parse dice rolls
+  private def diceRoll: Parser[Int] = "[1-6]".r ^^ (_.toInt)
+
+  private def doubleDiceRoll: Parser[DiceRoll] = diceRoll ~ "," ~ diceRoll ^^ {
+    case d1 ~ _ ~ d2 => DiceRoll(d1, d2)
+  }
+
+  // Parses add player <name>
+  private def addPlayer: Parser[Command] = "add player" ~ ident ^^ {
+    case _ ~ name => AddPlayer(name)
+  }
+
+  // Parses move <name> or move <name> d1, d2
+  private def movePlayer: Parser[Command] = "move" ~ ident ~ opt(doubleDiceRoll) ^^ {
+    case _ ~ name ~ diceRoll => diceRoll match {
+      case Some(roll) => MovePlayer(name, roll)
+      case None => MovePlayer(name, rollDice())
+    }
+  }
+
+  // Quit command
+  private def quit: Parser[Command] = "quit".r ^^ (_ => Quit)
+
+  // Combinator
+  private def command: Parser[Command] = addPlayer | movePlayer | quit
 
 }
 
